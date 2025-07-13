@@ -10,73 +10,66 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 12px;
         }
         
         body {
             background-color: #ffffff;
-            color: #333;
-            padding: 10px;
-            max-width: 1000px;
-            margin: 0 auto;
+            padding: 8px;
+            max-width: 100%;
         }
         
         .malla-container {
             display: flex;
             overflow-x: auto;
-            gap: 12px;
-            padding: 8px 4px;
-            scrollbar-width: thin;
-            scrollbar-color: #000080 #f0f0f0;
+            gap: 8px;
+            padding: 4px 2px;
+            scrollbar-width: none;
         }
         
         .malla-container::-webkit-scrollbar {
-            height: 6px;
-        }
-        
-        .malla-container::-webkit-scrollbar-track {
-            background: #f0f0f0;
-            border-radius: 3px;
+            height: 4px;
         }
         
         .malla-container::-webkit-scrollbar-thumb {
             background: #000080;
-            border-radius: 3px;
+            border-radius: 2px;
         }
         
         .semestre {
-            min-width: 200px;
-            border: 2px solid #0E0E55;
-            border-radius: 10px;
+            min-width: 160px;
+            border: 1.5px solid #0E0E55;
+            border-radius: 6px;
             background: white;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
         }
         
         .semestre-header {
             background: #000080;
             color: white;
             text-align: center;
-            padding: 8px;
+            padding: 5px;
             font-weight: 600;
-            font-size: 16px;
-            border-radius: 8px 8px 0 0;
+            font-size: 11px;
+            border-radius: 5px 5px 0 0;
         }
         
         .materias-container {
-            padding: 12px;
+            padding: 6px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            min-height: 280px;
+            gap: 5px;
+            min-height: 180px;
         }
         
         .materia {
-            padding: 12px;
-            border-radius: 6px;
+            padding: 6px;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s;
             position: relative;
-            border: 1px solid #ddd;
-            font-size: 13px;
+            border: 0.5px solid #ddd;
+            font-size: 10px;
+            line-height: 1.2;
         }
         
         .materia.available {
@@ -96,163 +89,32 @@
             cursor: not-allowed;
         }
         
-        .materia.available:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-        }
-        
-        .materia.completed:hover {
-            background: #d04a63;
-        }
-        
         .materia h4 {
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             font-weight: 600;
+            font-size: 10px;
         }
         
         .creditos {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 4px;
+            right: 4px;
             background: rgba(0,0,0,0.1);
-            border-radius: 10px;
-            padding: 2px 6px;
-            font-size: 11px;
+            border-radius: 6px;
+            padding: 1px 4px;
+            font-size: 9px;
             font-weight: bold;
         }
         
         .codigo {
-            font-size: 11px;
+            font-size: 9px;
             opacity: 0.8;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0 10px;
-            flex-wrap: wrap;
-        }
-        
-        .stat-card {
-            background: #f0f8ff;
-            border: 1px solid #0E0E55;
-            border-radius: 8px;
-            padding: 8px;
-            min-width: 120px;
-            text-align: center;
-            font-size: 12px;
-        }
-        
-        .stat-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #000080;
-            margin: 4px 0;
-        }
-        
-        .progress-container {
-            width: 100%;
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            margin-top: 4px;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #000080, #0E0E55);
-            border-radius: 4px;
-            transition: width 0.3s ease-in-out;
-        }
-        
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 12px 0;
-            font-size: 12px;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
-        }
-        
-        .legend-available {
-            background: #FFEE8C;
-        }
-        
-        .legend-completed {
-            background: #E05F77;
-        }
-        
-        .legend-locked {
-            background: #f0f0f0;
-        }
-        
-        @media (max-width: 768px) {
-            .semestre {
-                min-width: 180px;
-            }
-            
-            .materia {
-                padding: 10px;
-                font-size: 12px;
-            }
-            
-            .semestre-header {
-                font-size: 14px;
-            }
         }
     </style>
 </head>
 <body>
     <div class="malla-container" id="malla-container">
         <!-- Semestres se generarán con JavaScript -->
-    </div>
-    
-    <div class="legend">
-        <div class="legend-item">
-            <div class="legend-color legend-available"></div>
-            <span>Disponible</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-color legend-completed"></div>
-            <span>Completada</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-color legend-locked"></div>
-            <span>Bloqueada</span>
-        </div>
-    </div>
-    
-    <div class="stats">
-        <div class="stat-card">
-            <div>Créditos</div>
-            <div class="stat-value" id="creditos-completados">0</div>
-            <div>de 169</div>
-        </div>
-        <div class="stat-card">
-            <div>Materias</div>
-            <div class="stat-value" id="materias-completadas">0</div>
-            <div>de 47</div>
-        </div>
-        <div class="stat-card">
-            <div>Progreso</div>
-            <div class="progress-container">
-                <div class="progress-bar" id="progreso-general" style="width: 0%"></div>
-            </div>
-            <div class="stat-value" id="porcentaje-progreso">0%</div>
-        </div>
     </div>
 
     <script>
@@ -368,7 +230,6 @@
             }
             
             renderMalla();
-            actualizarEstadisticas();
         }
         
         // Renderizar la malla
@@ -382,7 +243,7 @@
                 
                 const header = document.createElement('div');
                 header.className = 'semestre-header';
-                header.textContent = `Semestre ${semestre.semestre}`;
+                header.textContent = `Sem ${semestre.semestre}`;
                 semestreDiv.appendChild(header);
                 
                 const materiasContainer = document.createElement('div');
@@ -404,7 +265,6 @@
                     // Contenido de la materia
                     materiaDiv.innerHTML = `
                         <h4>${materia.nombre}</h4>
-                        <div class="codigo">${materia.codigo}</div>
                         <div class="creditos">${materia.creditos} CR</div>
                     `;
                     
@@ -414,7 +274,6 @@
                             estadoMaterias[materia.id] = !estadoMaterias[materia.id];
                             localStorage.setItem('estadoMaterias', JSON.stringify(estadoMaterias));
                             renderMalla();
-                            actualizarEstadisticas();
                         }
                     });
                     
@@ -470,23 +329,6 @@
                 });
             });
             return total;
-        }
-        
-        // Calcular materias completadas
-        function calcularMateriasCompletadas() {
-            return Object.values(estadoMaterias).filter(v => v).length;
-        }
-        
-        // Actualizar estadísticas
-        function actualizarEstadisticas() {
-            const creditos = calcularCreditosCompletados();
-            const materias = calcularMateriasCompletadas();
-            const porcentaje = Math.round((creditos / 169) * 100);
-            
-            document.getElementById('creditos-completados').textContent = creditos;
-            document.getElementById('materias-completadas').textContent = materias;
-            document.getElementById('porcentaje-progreso').textContent = `${porcentaje}%`;
-            document.getElementById('progreso-general').style.width = `${porcentaje}%`;
         }
         
         // Inicializar cuando el documento esté cargado
