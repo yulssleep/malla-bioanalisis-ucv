@@ -3,178 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Malla Curricular - Bioanálisis - UCV</title>
+    <title>Malla Interactiva Bioanálisis - UCV</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --color-primario: #0056b3;
-            --color-secundario: #e9f0f7;
-            --color-hover: #003d82;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
-
+        
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            line-height: 1.6;
-            max-width: 1200px;
-            margin: 0 auto;
+            background-color: white;
             padding: 20px;
-            background-color: #f5f7fa;
-            color: #333;
+            max-width: 1400px;
+            margin: 0 auto;
         }
-
+        
         header {
             text-align: center;
             margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, var(--color-primario), #003366);
-            color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 15px;
+            border-bottom: 3px solid #0E0E55;
         }
-
+        
         h1 {
-            margin: 0;
-            font-size: 2.2em;
+            color: #0E0E55;
+            margin-bottom: 10px;
         }
-
-        h2 {
-            margin-top: 5px;
-            font-weight: 400;
-            font-size: 1.4em;
-        }
-
+        
         .controls {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
+            justify-content: center;
             gap: 15px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
-
-        #buscador {
-            flex-grow: 1;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            max-width: 400px;
-        }
-
+        
         button {
-            background-color: var(--color-primario);
+            background: #000080;
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 30px;
             cursor: pointer;
             font-weight: 600;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-
+        
         button:hover {
-            background-color: var(--color-hover);
+            background: #0E0E55;
+            transform: translateY(-2px);
         }
-
-        #malla-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        
+        button i {
+            font-size: 18px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
             gap: 25px;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
-
-        .semestre {
-            background-color: white;
+        
+        .stat-card {
+            background: #f0f8ff;
+            border: 2px solid #0E0E55;
             border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-            transition: transform 0.3s;
+            padding: 15px;
+            min-width: 180px;
+            text-align: center;
         }
-
-        .semestre:hover {
-            transform: translateY(-5px);
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #000080;
         }
-
-        .semestre h3 {
-            margin-top: 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--color-primario);
-            color: var(--color-primario);
+        
+        .malla-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 15px 5px;
+            margin-top: 20px;
         }
-
-        .asignatura {
-            background-color: var(--color-secundario);
-            margin: 12px 0;
+        
+        .semestre {
+            min-width: 250px;
+            border: 3px solid #0E0E55;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        
+        .semestre-header {
+            background: #000080;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-weight: bold;
+            font-size: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .materias-container {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 400px;
+        }
+        
+        .materia {
             padding: 15px;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
-            border-left: 4px solid var(--color-primario);
+            transition: all 0.3s;
+            position: relative;
+            border: 1px solid #ddd;
         }
-
-        .asignatura:hover {
-            background-color: #dbe7f5;
-            transform: translateX(5px);
+        
+        .materia.available {
+            background: #FFEE8C;
+            color: black;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
-
-        #detalles-asignatura {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            z-index: 1000;
-            width: 90%;
-            max-width: 600px;
+        
+        .materia.completed {
+            background: #E05F77;
+            color: white;
+            text-decoration: line-through;
         }
-
-        .hidden {
+        
+        .materia.locked {
+            background: #f0f0f0;
+            color: #888;
+            cursor: not-allowed;
+        }
+        
+        .materia.available:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        .materia h4 {
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .creditos {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .codigo {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #000080, #0E0E55);
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        
+        .modal {
             display: none;
-        }
-
-        .overlay {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
-
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #000080;
+        }
+        
+        .prereq {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+        }
+        
+        .prereq-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+        }
+        
+        .prereq-status {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .prereq-status.completed {
+            background: #E05F77;
+            color: white;
+        }
+        
+        .reset-section {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
-            #malla-container {
-                grid-template-columns: 1fr;
+            .semestre {
+                min-width: 220px;
             }
             
             .controls {
                 flex-direction: column;
-            }
-            
-            #buscador {
-                max-width: 100%;
+                align-items: center;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>LICENCIATURA EN BIOANÁLISIS</h1>
-        <h2>Universidad Central de Venezuela</h2>
+        <h1>LICENCIATURA EN BIOANÁLISIS - UCV</h1>
+        <p>Malla curricular interactiva</p>
     </header>
-
+    
     <div class="controls">
-        <button id="ver-todo">Ver Todo el Pensum</button>
-        <input type="text" id="buscador" placeholder="Buscar asignatura...">
+        <button id="btn-todo">
+            <i>✓</i> Ver todas las materias
+        </button>
+        <button id="btn-guardar">
+            <i>💾</i> Guardar mi progreso
+        </button>
+        <button id="btn-cargar">
+            <i>📂</i> Cargar progreso
+        </button>
+        <button id="btn-reset">
+            <i>🔄</i> Reiniciar
+        </button>
     </div>
-
-    <div id="malla-container">
-        <!-- Las asignaturas se cargarán aquí con JavaScript -->
+    
+    <div class="stats">
+        <div class="stat-card">
+            <div>Créditos completados</div>
+            <div class="stat-value" id="creditos-completados">0</div>
+            <div>de 169 totales</div>
+        </div>
+        <div class="stat-card">
+            <div>Materias completadas</div>
+            <div class="stat-value" id="materias-completadas">0</div>
+            <div>de 47 totales</div>
+        </div>
+        <div class="stat-card">
+            <div>Progreso general</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progreso-general" style="width: 0%"></div>
+            </div>
+            <div class="stat-value" id="porcentaje-progreso">0%</div>
+        </div>
     </div>
-
-    <div id="detalles-asignatura" class="hidden">
-        <!-- Detalles de la asignatura -->
+    
+    <div class="malla-container" id="malla-container">
+        <!-- Semestres se generarán con JavaScript -->
+    </div>
+    
+    <div class="reset-section">
+        <button id="btn-reset-completo" style="background: #E05F77;">
+            <i>⚠️</i> Reiniciar todo el progreso
+        </button>
+    </div>
+    
+    <div class="modal" id="detalle-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h3 id="modal-titulo"></h3>
+            <p><strong>Código:</strong> <span id="modal-codigo"></span></p>
+            <p><strong>Créditos:</strong> <span id="modal-creditos"></span></p>
+            <div class="prereq" id="modal-prereq">
+                <h4>Requisitos:</h4>
+                <div id="prereq-list"></div>
+            </div>
+            <button id="btn-completar" style="margin-top: 20px; width: 100%;">
+                <i>✓</i> Marcar como completada
+            </button>
+        </div>
     </div>
 
     <script>
@@ -183,162 +343,406 @@
             // Semestre 1
             {
                 semestre: 1,
-                asignaturas: [
-                    { nombre: "Bioestadística I", creditos: 4, codigo: "0902003458", requisitos: "" },
-                    { nombre: "Matemática I", creditos: 3, codigo: "0902003455", requisitos: "" },
-                    { nombre: "Histología", creditos: 5, codigo: "0902003456", requisitos: "" },
-                    { nombre: "Metodología Inv.", creditos: 1, codigo: "0902003459", requisitos: "" },
-                    { nombre: "Principios de Química", creditos: 3, codigo: "0902003457", requisitos: "" }
+                materias: [
+                    { id: "bioestadistica1", nombre: "Bioestadística I", codigo: "0902003458", creditos: 4, requisitos: [] },
+                    { id: "matematica1", nombre: "Matemática I", codigo: "0902003455", creditos: 3, requisitos: [] },
+                    { id: "histologia", nombre: "Histología", codigo: "0902003456", creditos: 5, requisitos: [] },
+                    { id: "metodologia", nombre: "Metodología Inv.", codigo: "0902003459", creditos: 1, requisitos: [] },
+                    { id: "principios_quimica", nombre: "Principios de Química", codigo: "0902003457", creditos: 3, requisitos: [] }
                 ]
             },
             // Semestre 2
             {
                 semestre: 2,
-                asignaturas: [
-                    { nombre: "Anatomía y Embriología I", creditos: 4, codigo: "0902002520", requisitos: "Histología (0902003456)" },
-                    { nombre: "Matemática II", creditos: 4, codigo: "0902003460", requisitos: "Matemática I (0902003455)" },
-                    { nombre: "Física I", creditos: 4, codigo: "0902003274", requisitos: "Matemática I (0902003455)" },
-                    { nombre: "Química Orgánica I", creditos: 4, codigo: "0902003461", requisitos: "Principios de Química (0902003457)" }
+                materias: [
+                    { id: "anatomia1", nombre: "Anatomía y Embriología I", codigo: "0902002520", creditos: 4, requisitos: ["histologia"] },
+                    { id: "matematica2", nombre: "Matemática II", codigo: "0902003460", creditos: 4, requisitos: ["matematica1"] },
+                    { id: "fisica1", nombre: "Física I", codigo: "0902003274", creditos: 4, requisitos: ["matematica1"] },
+                    { id: "quimica_organica1", nombre: "Química Orgánica I", codigo: "0902003461", creditos: 4, requisitos: ["principios_quimica"] }
                 ]
             },
             // Semestre 3
             {
                 semestre: 3,
-                asignaturas: [
-                    { nombre: "Epidemiología", creditos: 3, codigo: "0902003288", requisitos: "Bioestadística I (0902003458)" },
-                    { nombre: "Anatomía II", creditos: 2, codigo: "0902002526", requisitos: "Anatomía y Embriología I (0902002520)" },
-                    { nombre: "Física II", creditos: 4, codigo: "0902003275", requisitos: "Física I (0902003274), Matemática I (0902003455)" },
-                    { nombre: "Química Analítica", creditos: 5, codigo: "0902002523", requisitos: "Principios de Química (0902003457)" }
+                materias: [
+                    { id: "epidemiologia", nombre: "Epidemiología", codigo: "0902003288", creditos: 3, requisitos: ["bioestadistica1"] },
+                    { id: "anatomia2", nombre: "Anatomía II", codigo: "0902002526", creditos: 2, requisitos: ["anatomia1"] },
+                    { id: "fisica2", nombre: "Física II", codigo: "0902003275", creditos: 4, requisitos: ["fisica1", "matematica1"] },
+                    { id: "quimica_analitica", nombre: "Química Analítica", codigo: "0902002523", creditos: 5, requisitos: ["principios_quimica"] }
                 ]
             },
             // Semestre 4
             {
                 semestre: 4,
-                asignaturas: [
-                    { nombre: "Bioquímica I", creditos: 6, codigo: "0902002991", requisitos: "Química Orgánica I (0902003461), Química Analítica (0902002523), Bioestadística I (0902003458)" },
-                    { nombre: "Fisiología", creditos: 5, codigo: "0902002994", requisitos: "Histología (0902003456), Física II (0902003275)" },
-                    { nombre: "Sociología", creditos: 3, codigo: "0902003462", requisitos: "Anatomía y Embriología I (0902002520)" }
+                materias: [
+                    { id: "bioquimica1", nombre: "Bioquímica I", codigo: "0902002991", creditos: 6, requisitos: ["quimica_organica1", "quimica_analitica", "bioestadistica1"] },
+                    { id: "fisiologia", nombre: "Fisiología", codigo: "0902002994", creditos: 5, requisitos: ["histologia", "fisica2"] },
+                    { id: "sociologia", nombre: "Sociología", codigo: "0902003462", creditos: 3, requisitos: ["anatomia1"] }
                 ]
             },
             // Semestre 5
             {
                 semestre: 5,
-                asignaturas: [
-                    { nombre: "Bioquímica II", creditos: 2, codigo: "0902002992", requisitos: "Bioquímica I (0902002991)" },
-                    { nombre: "Bacteriología I", creditos: 3, codigo: "0902003465", requisitos: "Bioquímica I (0902002991)" },
-                    { nombre: "Immunología I", creditos: 2, codigo: "0902002999", requisitos: "Bioquímica I (0902002991)" },
-                    { nombre: "Deontología", creditos: 3, codigo: "0902003464", requisitos: "45 créditos aprobados" },
-                    { nombre: "Administración Sanitaria", creditos: 3, codigo: "0902003463", requisitos: "40 créditos aprobados" }
+                materias: [
+                    { id: "bioquimica2", nombre: "Bioquímica II", codigo: "0902002992", creditos: 2, requisitos: ["bioquimica1"] },
+                    { id: "bacteriologia1", nombre: "Bacteriología I", codigo: "0902003465", creditos: 3, requisitos: ["bioquimica1"] },
+                    { id: "inmunologia1", nombre: "Immunología I", codigo: "0902002999", creditos: 2, requisitos: ["bioquimica1"] },
+                    { id: "deontologia", nombre: "Deontología", codigo: "0902003464", creditos: 3, requisitos: ["45creditos"] },
+                    { id: "administracion", nombre: "Administración Sanitaria", codigo: "0902003463", creditos: 3, requisitos: ["40creditos"] }
                 ]
             },
             // Semestre 6
             {
                 semestre: 6,
-                asignaturas: [
-                    { nombre: "Bioquímica Cl. I", creditos: 5, codigo: "0902003277", requisitos: "Fisiología (0902002994), Bioquímica II (0902002992)" },
-                    { nombre: "Bacteriología II", creditos: 4, codigo: "0902003466", requisitos: "Bacteriología I (0902003465), Immunología I (0902002999)" },
-                    { nombre: "Laboratorio de Inmunología", creditos: 2, codigo: "0902003278", requisitos: "Immunología I (0902002999), Bacteriología I (0902003465)" },
-                    { nombre: "Micología I", creditos: 3, codigo: "0902003279", requisitos: "Bacteriología I (0902003465), Immunología I (0902002999), Epidemiología (0902003288)" }
+                materias: [
+                    { id: "bioquimica_clinica1", nombre: "Bioquímica Cl. I", codigo: "0902003277", creditos: 5, requisitos: ["fisiologia", "bioquimica2"] },
+                    { id: "bacteriologia2", nombre: "Bacteriología II", codigo: "0902003466", creditos: 4, requisitos: ["bacteriologia1", "inmunologia1"] },
+                    { id: "lab_inmunologia", nombre: "Laboratorio de Inmunología", codigo: "0902003278", creditos: 2, requisitos: ["inmunologia1", "bacteriologia1"] },
+                    { id: "micologia1", nombre: "Micología I", codigo: "0902003279", creditos: 3, requisitos: ["bacteriologia1", "inmunologia1", "epidemiologia"] }
                 ]
             },
             // Semestre 7
             {
                 semestre: 7,
-                asignaturas: [
-                    { nombre: "Bacteriología III", creditos: 4, codigo: "0902003467", requisitos: "Bacteriología II (0902003466)" },
-                    { nombre: "Hematología I", creditos: 5, codigo: "0902003280", requisitos: "Fisiología (0902002994), Bioquímica II (0902002992), Laboratorio de Inmunología (0902003278)" },
-                    { nombre: "Parasitología I", creditos: 4, codigo: "0902002988", requisitos: "Laboratorio de Inmunología (0902003278)" },
-                    { nombre: "Virología", creditos: 3, codigo: "0902003284", requisitos: "Laboratorio de Inmunología (0902003278), Fisiología (0902002994)" }
+                materias: [
+                    { id: "bacteriologia3", nombre: "Bacteriología III", codigo: "0902003467", creditos: 4, requisitos: ["bacteriologia2"] },
+                    { id: "hematologia1", nombre: "Hematología I", codigo: "0902003280", creditos: 5, requisitos: ["fisiologia", "bioquimica2", "lab_inmunologia"] },
+                    { id: "parasitologia1", nombre: "Parasitología I", codigo: "0902002988", creditos: 4, requisitos: ["lab_inmunologia"] },
+                    { id: "virologia", nombre: "Virología", codigo: "0902003284", creditos: 3, requisitos: ["lab_inmunologia", "fisiologia"] }
                 ]
             },
             // Semestre 8
             {
                 semestre: 8,
-                asignaturas: [
-                    { nombre: "Bioquímica Cl. II", creditos: 5, codigo: "0902003281", requisitos: "Bioquímica Cl. I (0902003277), Hematología I (0902003280)" },
-                    { nombre: "Hematología II", creditos: 5, codigo: "0902003282", requisitos: "Hematología I (0902003280)" },
-                    { nombre: "Parasitología II", creditos: 3, codigo: "0902003283", requisitos: "Laboratorio de Inmunología (0902003278)" },
-                    { nombre: "Toxicología", creditos: 5, codigo: "0902003285", requisitos: "Hematología I (0902003280), Bioquímica Cl. I (0902003277)" }
+                materias: [
+                    { id: "bioquimica_clinica2", nombre: "Bioquímica Cl. II", codigo: "0902003281", creditos: 5, requisitos: ["bioquimica_clinica1", "hematologia1"] },
+                    { id: "hematologia2", nombre: "Hematología II", codigo: "0902003282", creditos: 5, requisitos: ["hematologia1"] },
+                    { id: "parasitologia2", nombre: "Parasitología II", codigo: "0902003283", creditos: 3, requisitos: ["lab_inmunologia"] },
+                    { id: "toxicologia", nombre: "Toxicología", codigo: "0902003285", creditos: 5, requisitos: ["hematologia1", "bioquimica_clinica1"] }
                 ]
             },
             // Semestre 9-10
             {
                 semestre: "9-10",
-                asignaturas: [
-                    { nombre: "Internado R + TEI", creditos: 30, codigo: "0902003508", requisitos: "Todo pre-internado" },
-                    { nombre: "Asignaturas electivas", creditos: 18, codigo: "", requisitos: "" }
+                materias: [
+                    { id: "internado", nombre: "Internado R + TEI", codigo: "0902003508", creditos: 30, requisitos: ["pre-internado"] },
+                    { id: "electivas", nombre: "Asignaturas electivas", codigo: "", creditos: 18, requisitos: [] }
                 ]
             }
         ];
 
-        // Función para mostrar la malla
-        function mostrarMalla() {
+        // Estado de las materias
+        let estadoMaterias = {};
+        let materiaActual = null;
+        
+        // Inicializar
+        function init() {
+            // Cargar estado guardado si existe
+            const guardado = localStorage.getItem('estadoMaterias');
+            if (guardado) {
+                estadoMaterias = JSON.parse(guardado);
+            } else {
+                // Inicializar todas como no completadas
+                pensum.forEach(semestre => {
+                    semestre.materias.forEach(materia => {
+                        estadoMaterias[materia.id] = false;
+                    });
+                });
+            }
+            
+            renderMalla();
+            actualizarEstadisticas();
+            
+            // Event listeners
+            document.getElementById('close-modal').addEventListener('click', cerrarModal);
+            document.getElementById('btn-completar').addEventListener('click', completarMateria);
+            document.getElementById('btn-todo').addEventListener('click', verTodasMaterias);
+            document.getElementById('btn-guardar').addEventListener('click', guardarProgreso);
+            document.getElementById('btn-cargar').addEventListener('click', cargarProgreso);
+            document.getElementById('btn-reset').addEventListener('click', reiniciarProgreso);
+            document.getElementById('btn-reset-completo').addEventListener('click', reiniciarTodo);
+        }
+        
+        // Renderizar la malla
+        function renderMalla() {
             const container = document.getElementById('malla-container');
             container.innerHTML = '';
-
+            
             pensum.forEach(semestre => {
                 const semestreDiv = document.createElement('div');
                 semestreDiv.className = 'semestre';
                 
-                semestreDiv.innerHTML = `<h3>Semestre ${semestre.semestre}</h3>`;
+                const header = document.createElement('div');
+                header.className = 'semestre-header';
+                header.textContent = `Semestre ${semestre.semestre}`;
+                semestreDiv.appendChild(header);
                 
-                semestre.asignaturas.forEach(asignatura => {
-                    const asignaturaDiv = document.createElement('div');
-                    asignaturaDiv.className = 'asignatura';
-                    asignaturaDiv.innerHTML = `
-                        <strong>${asignatura.nombre}</strong>
-                        <div>${asignatura.creditos} créditos</div>
-                        <small>Código: ${asignatura.codigo}</small>
+                const materiasContainer = document.createElement('div');
+                materiasContainer.className = 'materias-container';
+                
+                semestre.materias.forEach(materia => {
+                    const materiaDiv = document.createElement('div');
+                    materiaDiv.className = 'materia';
+                    
+                    // Determinar el estado de la materia
+                    if (estadoMaterias[materia.id]) {
+                        materiaDiv.classList.add('completed');
+                    } else if (estaDisponible(materia)) {
+                        materiaDiv.classList.add('available');
+                    } else {
+                        materiaDiv.classList.add('locked');
+                    }
+                    
+                    // Contenido de la materia
+                    materiaDiv.innerHTML = `
+                        <h4>${materia.nombre}</h4>
+                        <div class="codigo">${materia.codigo}</div>
+                        <div class="creditos">${materia.creditos} CR</div>
                     `;
                     
-                    asignaturaDiv.addEventListener('click', () => mostrarDetalles(asignatura));
-                    semestreDiv.appendChild(asignaturaDiv);
+                    // Evento click solo para materias disponibles
+                    if (estaDisponible(materia)) {
+                        materiaDiv.addEventListener('click', () => {
+                            mostrarDetalleMateria(materia);
+                        });
+                    }
+                    
+                    materiasContainer.appendChild(materiaDiv);
                 });
                 
+                semestreDiv.appendChild(materiasContainer);
                 container.appendChild(semestreDiv);
             });
         }
-
-        // Función para mostrar detalles de asignatura
-        function mostrarDetalles(asignatura) {
-            const detalles = document.getElementById('detalles-asignatura');
-            const overlay = document.createElement('div');
-            overlay.className = 'overlay';
+        
+        // Verificar si una materia está disponible
+        function estaDisponible(materia) {
+            if (estadoMaterias[materia.id]) return false; // Ya completada
             
-            detalles.innerHTML = `
-                <h3>${asignatura.nombre}</h3>
-                <p><strong>Código:</strong> ${asignatura.codigo || 'N/A'}</p>
-                <p><strong>Créditos:</strong> ${asignatura.creditos}</p>
-                <p><strong>Requisitos:</strong> ${asignatura.requisitos || 'Ninguno'}</p>
-                <button id="cerrar-detalles">Cerrar</button>
-            `;
+            // Verificar requisitos especiales
+            if (materia.requisitos.includes('45creditos')) {
+                if (calcularCreditosCompletados() < 45) return false;
+            }
             
-            detalles.classList.remove('hidden');
-            document.body.appendChild(overlay);
+            if (materia.requisitos.includes('40creditos')) {
+                if (calcularCreditosCompletados() < 40) return false;
+            }
             
-            document.getElementById('cerrar-detalles').addEventListener('click', () => {
-                detalles.classList.add('hidden');
-                document.body.removeChild(overlay);
-            });
+            if (materia.requisitos.includes('pre-internado')) {
+                // Verificar que todas las materias de semestres 1-8 estén completadas
+                const materiasPre = pensum.filter(s => s.semestre !== "9-10").flatMap(s => s.materias);
+                for (const m of materiasPre) {
+                    if (!estadoMaterias[m.id]) return false;
+                }
+            }
+            
+            // Verificar requisitos normales
+            for (const reqId of materia.requisitos) {
+                if (reqId !== '45creditos' && reqId !== '40creditos' && reqId !== 'pre-internado') {
+                    if (!estadoMaterias[reqId]) {
+                        return false;
+                    }
+                }
+            }
+            
+            return true;
         }
-
-        // Función de búsqueda
-        document.getElementById('buscador').addEventListener('input', (e) => {
-            const termino = e.target.value.toLowerCase();
-            const asignaturas = document.querySelectorAll('.asignatura');
+        
+        // Mostrar detalles de una materia
+        function mostrarDetalleMateria(materia) {
+            materiaActual = materia;
+            const modal = document.getElementById('detalle-modal');
+            const titulo = document.getElementById('modal-titulo');
+            const codigo = document.getElementById('modal-codigo');
+            const creditos = document.getElementById('modal-creditos');
+            const prereqList = document.getElementById('prereq-list');
             
-            asignaturas.forEach(asignatura => {
-                const texto = asignatura.textContent.toLowerCase();
-                asignatura.style.display = texto.includes(termino) ? 'block' : 'none';
+            titulo.textContent = materia.nombre;
+            codigo.textContent = materia.codigo;
+            creditos.textContent = materia.creditos;
+            
+            prereqList.innerHTML = '';
+            
+            if (materia.requisitos.length === 0) {
+                prereqList.innerHTML = '<p>No tiene requisitos previos</p>';
+            } else {
+                materia.requisitos.forEach(reqId => {
+                    // Requisitos especiales
+                    if (reqId === '45creditos') {
+                        const item = document.createElement('div');
+                        item.className = 'prereq-item';
+                        const completado = calcularCreditosCompletados() >= 45;
+                        
+                        item.innerHTML = `
+                            <div class="prereq-status ${completado ? 'completed' : ''}">${completado ? '✓' : ''}</div>
+                            <div>45 créditos completados</div>
+                        `;
+                        prereqList.appendChild(item);
+                    } else if (reqId === '40creditos') {
+                        const item = document.createElement('div');
+                        item.className = 'prereq-item';
+                        const completado = calcularCreditosCompletados() >= 40;
+                        
+                        item.innerHTML = `
+                            <div class="prereq-status ${completado ? 'completed' : ''}">${completado ? '✓' : ''}</div>
+                            <div>40 créditos completados</div>
+                        `;
+                        prereqList.appendChild(item);
+                    } else if (reqId === 'pre-internado') {
+                        const item = document.createElement('div');
+                        item.className = 'prereq-item';
+                        const completado = verificarPreInternado();
+                        
+                        item.innerHTML = `
+                            <div class="prereq-status ${completado ? 'completed' : ''}">${completado ? '✓' : ''}</div>
+                            <div>Todas las materias pre-internado completadas</div>
+                        `;
+                        prereqList.appendChild(item);
+                    } else {
+                        // Requisitos normales
+                        const reqMateria = encontrarMateriaPorId(reqId);
+                        if (reqMateria) {
+                            const item = document.createElement('div');
+                            item.className = 'prereq-item';
+                            const completado = estadoMaterias[reqId];
+                            
+                            item.innerHTML = `
+                                <div class="prereq-status ${completado ? 'completed' : ''}">${completado ? '✓' : ''}</div>
+                                <div>${reqMateria.nombre}</div>
+                            `;
+                            prereqList.appendChild(item);
+                        }
+                    }
+                });
+            }
+            
+            modal.style.display = 'flex';
+        }
+        
+        // Encontrar materia por ID
+        function encontrarMateriaPorId(id) {
+            for (const semestre of pensum) {
+                for (const materia of semestre.materias) {
+                    if (materia.id === id) {
+                        return materia;
+                    }
+                }
+            }
+            return null;
+        }
+        
+        // Cerrar modal
+        function cerrarModal() {
+            document.getElementById('detalle-modal').style.display = 'none';
+        }
+        
+        // Completar materia
+        function completarMateria() {
+            if (materiaActual) {
+                estadoMaterias[materiaActual.id] = true;
+                localStorage.setItem('estadoMaterias', JSON.stringify(estadoMaterias));
+                renderMalla();
+                actualizarEstadisticas();
+                cerrarModal();
+            }
+        }
+        
+        // Calcular créditos completados
+        function calcularCreditosCompletados() {
+            let total = 0;
+            pensum.forEach(semestre => {
+                semestre.materias.forEach(materia => {
+                    if (estadoMaterias[materia.id]) {
+                        total += materia.creditos;
+                    }
+                });
             });
-        });
-
-        // Inicializar
-        document.addEventListener('DOMContentLoaded', () => {
-            mostrarMalla();
+            return total;
+        }
+        
+        // Calcular materias completadas
+        function calcularMateriasCompletadas() {
+            return Object.values(estadoMaterias).filter(v => v).length;
+        }
+        
+        // Verificar pre-internado
+        function verificarPreInternado() {
+            const materiasPre = pensum.filter(s => s.semestre !== "9-10").flatMap(s => s.materias);
+            return materiasPre.every(m => estadoMaterias[m.id]);
+        }
+        
+        // Actualizar estadísticas
+        function actualizarEstadisticas() {
+            const creditos = calcularCreditosCompletados();
+            const materias = calcularMateriasCompletadas();
+            const porcentaje = Math.round((creditos / 169) * 100);
             
-            document.getElementById('ver-todo').addEventListener('click', mostrarMalla);
-        });
+            document.getElementById('creditos-completados').textContent = creditos;
+            document.getElementById('materias-completadas').textContent = materias;
+            document.getElementById('porcentaje-progreso').textContent = `${porcentaje}%`;
+            document.getElementById('progreso-general').style.width = `${porcentaje}%`;
+        }
+        
+        // Ver todas las materias
+        function verTodasMaterias() {
+            // Mostrar todas las materias como disponibles temporalmente
+            const materias = document.querySelectorAll('.materia');
+            materias.forEach(m => {
+                m.classList.remove('locked');
+                if (!m.classList.contains('completed')) {
+                    m.classList.add('available');
+                }
+            });
+            
+            setTimeout(() => {
+                renderMalla();
+            }, 3000);
+        }
+        
+        // Guardar progreso
+        function guardarProgreso() {
+            localStorage.setItem('estadoMaterias', JSON.stringify(estadoMaterias));
+            alert('Progreso guardado correctamente ✅');
+        }
+        
+        // Cargar progreso
+        function cargarProgreso() {
+            const guardado = localStorage.getItem('estadoMaterias');
+            if (guardado) {
+                estadoMaterias = JSON.parse(guardado);
+                renderMalla();
+                actualizarEstadisticas();
+                alert('Progreso cargado correctamente ✅');
+            } else {
+                alert('No se encontró progreso guardado');
+            }
+        }
+        
+        // Reiniciar progreso
+        function reiniciarProgreso() {
+            if (confirm('¿Estás seguro de reiniciar tu progreso? Se perderán todos los datos guardados.')) {
+                localStorage.removeItem('estadoMaterias');
+                estadoMaterias = {};
+                pensum.forEach(semestre => {
+                    semestre.materias.forEach(materia => {
+                        estadoMaterias[materia.id] = false;
+                    });
+                });
+                renderMalla();
+                actualizarEstadisticas();
+            }
+        }
+        
+        // Reiniciar todo
+        function reiniciarTodo() {
+            if (confirm('¿Estás seguro de reiniciar TODO el progreso? Esta acción no se puede deshacer.')) {
+                localStorage.removeItem('estadoMaterias');
+                location.reload();
+            }
+        }
+        
+        // Inicializar cuando el documento esté cargado
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
