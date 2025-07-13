@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Curricular - Bioanálisis - UCV</title>
+    <style>
+        :root {
+            --color-primario: #0056b3;
+            --color-secundario: #e9f0f7;
+            --color-hover: #003d82;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--color-primario), #003366);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+
+        h2 {
+            margin-top: 5px;
+            font-weight: 400;
+            font-size: 1.4em;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        #buscador {
+            flex-grow: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            max-width: 400px;
+        }
+
+        button {
+            background-color: var(--color-primario);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--color-hover);
+        }
+
+        #malla-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .semestre {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .semestre:hover {
+            transform: translateY(-5px);
+        }
+
+        .semestre h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--color-primario);
+            color: var(--color-primario);
+        }
+
+        .asignatura {
+            background-color: var(--color-secundario);
+            margin: 12px 0;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid var(--color-primario);
+        }
+
+        .asignatura:hover {
+            background-color: #dbe7f5;
+            transform: translateX(5px);
+        }
+
+        #detalles-asignatura {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #malla-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            #buscador {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>LICENCIATURA EN BIOANÁLISIS</h1>
+        <h2>Universidad Central de Venezuela</h2>
+    </header>
+
+    <div class="controls">
+        <button id="ver-todo">Ver Todo el Pensum</button>
+        <input type="text" id="buscador" placeholder="Buscar asignatura...">
+    </div>
+
+    <div id="malla-container">
+        <!-- Las asignaturas se cargarán aquí con JavaScript -->
+    </div>
+
+    <div id="detalles-asignatura" class="hidden">
+        <!-- Detalles de la asignatura -->
+    </div>
+
+    <script>
+        // Datos completos del pensum
+        const pensum = [
+            // Semestre 1
+            {
+                semestre: 1,
+                asignaturas: [
+                    { nombre: "Bioestadística I", creditos: 4, codigo: "0902003458", requisitos: "" },
+                    { nombre: "Matemática I", creditos: 3, codigo: "0902003455", requisitos: "" },
+                    { nombre: "Histología", creditos: 5, codigo: "0902003456", requisitos: "" },
+                    { nombre: "Metodología Inv.", creditos: 1, codigo: "0902003459", requisitos: "" },
+                    { nombre: "Principios de Química", creditos: 3, codigo: "0902003457", requisitos: "" }
+                ]
+            },
+            // Semestre 2
+            {
+                semestre: 2,
+                asignaturas: [
+                    { nombre: "Anatomía y Embriología I", creditos: 4, codigo: "0902002520", requisitos: "Histología (0902003456)" },
+                    { nombre: "Matemática II", creditos: 4, codigo: "0902003460", requisitos: "Matemática I (0902003455)" },
+                    { nombre: "Física I", creditos: 4, codigo: "0902003274", requisitos: "Matemática I (0902003455)" },
+                    { nombre: "Química Orgánica I", creditos: 4, codigo: "0902003461", requisitos: "Principios de Química (0902003457)" }
+                ]
+            },
+            // Semestre 3
+            {
+                semestre: 3,
+                asignaturas: [
+                    { nombre: "Epidemiología", creditos: 3, codigo: "0902003288", requisitos: "Bioestadística I (0902003458)" },
+                    { nombre: "Anatomía II", creditos: 2, codigo: "0902002526", requisitos: "Anatomía y Embriología I (0902002520)" },
+                    { nombre: "Física II", creditos: 4, codigo: "0902003275", requisitos: "Física I (0902003274), Matemática I (0902003455)" },
+                    { nombre: "Química Analítica", creditos: 5, codigo: "0902002523", requisitos: "Principios de Química (0902003457)" }
+                ]
+            },
+            // Semestre 4
+            {
+                semestre: 4,
+                asignaturas: [
+                    { nombre: "Bioquímica I", creditos: 6, codigo: "0902002991", requisitos: "Química Orgánica I (0902003461), Química Analítica (0902002523), Bioestadística I (0902003458)" },
+                    { nombre: "Fisiología", creditos: 5, codigo: "0902002994", requisitos: "Histología (0902003456), Física II (0902003275)" },
+                    { nombre: "Sociología", creditos: 3, codigo: "0902003462", requisitos: "Anatomía y Embriología I (0902002520)" }
+                ]
+            },
+            // Semestre 5
+            {
+                semestre: 5,
+                asignaturas: [
+                    { nombre: "Bioquímica II", creditos: 2, codigo: "0902002992", requisitos: "Bioquímica I (0902002991)" },
+                    { nombre: "Bacteriología I", creditos: 3, codigo: "0902003465", requisitos: "Bioquímica I (0902002991)" },
+                    { nombre: "Immunología I", creditos: 2, codigo: "0902002999", requisitos: "Bioquímica I (0902002991)" },
+                    { nombre: "Deontología", creditos: 3, codigo: "0902003464", requisitos: "45 créditos aprobados" },
+                    { nombre: "Administración Sanitaria", creditos: 3, codigo: "0902003463", requisitos: "40 créditos aprobados" }
+                ]
+            },
+            // Semestre 6
+            {
+                semestre: 6,
+                asignaturas: [
+                    { nombre: "Bioquímica Cl. I", creditos: 5, codigo: "0902003277", requisitos: "Fisiología (0902002994), Bioquímica II (0902002992)" },
+                    { nombre: "Bacteriología II", creditos: 4, codigo: "0902003466", requisitos: "Bacteriología I (0902003465), Immunología I (0902002999)" },
+                    { nombre: "Laboratorio de Inmunología", creditos: 2, codigo: "0902003278", requisitos: "Immunología I (0902002999), Bacteriología I (0902003465)" },
+                    { nombre: "Micología I", creditos: 3, codigo: "0902003279", requisitos: "Bacteriología I (0902003465), Immunología I (0902002999), Epidemiología (0902003288)" }
+                ]
+            },
+            // Semestre 7
+            {
+                semestre: 7,
+                asignaturas: [
+                    { nombre: "Bacteriología III", creditos: 4, codigo: "0902003467", requisitos: "Bacteriología II (0902003466)" },
+                    { nombre: "Hematología I", creditos: 5, codigo: "0902003280", requisitos: "Fisiología (0902002994), Bioquímica II (0902002992), Laboratorio de Inmunología (0902003278)" },
+                    { nombre: "Parasitología I", creditos: 4, codigo: "0902002988", requisitos: "Laboratorio de Inmunología (0902003278)" },
+                    { nombre: "Virología", creditos: 3, codigo: "0902003284", requisitos: "Laboratorio de Inmunología (0902003278), Fisiología (0902002994)" }
+                ]
+            },
+            // Semestre 8
+            {
+                semestre: 8,
+                asignaturas: [
+                    { nombre: "Bioquímica Cl. II", creditos: 5, codigo: "0902003281", requisitos: "Bioquímica Cl. I (0902003277), Hematología I (0902003280)" },
+                    { nombre: "Hematología II", creditos: 5, codigo: "0902003282", requisitos: "Hematología I (0902003280)" },
+                    { nombre: "Parasitología II", creditos: 3, codigo: "0902003283", requisitos: "Laboratorio de Inmunología (0902003278)" },
+                    { nombre: "Toxicología", creditos: 5, codigo: "0902003285", requisitos: "Hematología I (0902003280), Bioquímica Cl. I (0902003277)" }
+                ]
+            },
+            // Semestre 9-10
+            {
+                semestre: "9-10",
+                asignaturas: [
+                    { nombre: "Internado R + TEI", creditos: 30, codigo: "0902003508", requisitos: "Todo pre-internado" },
+                    { nombre: "Asignaturas electivas", creditos: 18, codigo: "", requisitos: "" }
+                ]
+            }
+        ];
+
+        // Función para mostrar la malla
+        function mostrarMalla() {
+            const container = document.getElementById('malla-container');
+            container.innerHTML = '';
+
+            pensum.forEach(semestre => {
+                const semestreDiv = document.createElement('div');
+                semestreDiv.className = 'semestre';
+                
+                semestreDiv.innerHTML = `<h3>Semestre ${semestre.semestre}</h3>`;
+                
+                semestre.asignaturas.forEach(asignatura => {
+                    const asignaturaDiv = document.createElement('div');
+                    asignaturaDiv.className = 'asignatura';
+                    asignaturaDiv.innerHTML = `
+                        <strong>${asignatura.nombre}</strong>
+                        <div>${asignatura.creditos} créditos</div>
+                        <small>Código: ${asignatura.codigo}</small>
+                    `;
+                    
+                    asignaturaDiv.addEventListener('click', () => mostrarDetalles(asignatura));
+                    semestreDiv.appendChild(asignaturaDiv);
+                });
+                
+                container.appendChild(semestreDiv);
+            });
+        }
+
+        // Función para mostrar detalles de asignatura
+        function mostrarDetalles(asignatura) {
+            const detalles = document.getElementById('detalles-asignatura');
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            
+            detalles.innerHTML = `
+                <h3>${asignatura.nombre}</h3>
+                <p><strong>Código:</strong> ${asignatura.codigo || 'N/A'}</p>
+                <p><strong>Créditos:</strong> ${asignatura.creditos}</p>
+                <p><strong>Requisitos:</strong> ${asignatura.requisitos || 'Ninguno'}</p>
+                <button id="cerrar-detalles">Cerrar</button>
+            `;
+            
+            detalles.classList.remove('hidden');
+            document.body.appendChild(overlay);
+            
+            document.getElementById('cerrar-detalles').addEventListener('click', () => {
+                detalles.classList.add('hidden');
+                document.body.removeChild(overlay);
+            });
+        }
+
+        // Función de búsqueda
+        document.getElementById('buscador').addEventListener('input', (e) => {
+            const termino = e.target.value.toLowerCase();
+            const asignaturas = document.querySelectorAll('.asignatura');
+            
+            asignaturas.forEach(asignatura => {
+                const texto = asignatura.textContent.toLowerCase();
+                asignatura.style.display = texto.includes(termino) ? 'block' : 'none';
+            });
+        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            mostrarMalla();
+            
+            document.getElementById('ver-todo').addEventListener('click', mostrarMalla);
+        });
+    </script>
+</body>
+</html>
