@@ -10,36 +10,27 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 12px;
+            font-size: 10px;
         }
         
         body {
             background-color: #ffffff;
-            padding: 8px;
+            padding: 5px;
             max-width: 100%;
         }
         
         .malla-container {
             display: flex;
             overflow-x: auto;
-            gap: 8px;
-            padding: 4px 2px;
+            gap: 6px;
+            padding: 3px 1px;
             scrollbar-width: none;
         }
         
-        .malla-container::-webkit-scrollbar {
-            height: 4px;
-        }
-        
-        .malla-container::-webkit-scrollbar-thumb {
-            background: #000080;
-            border-radius: 2px;
-        }
-        
         .semestre {
-            min-width: 160px;
-            border: 1.5px solid #0E0E55;
-            border-radius: 6px;
+            min-width: 145px;
+            border: 1px solid #0E0E55;
+            border-radius: 4px;
             background: white;
         }
         
@@ -47,29 +38,31 @@
             background: #000080;
             color: white;
             text-align: center;
-            padding: 5px;
+            padding: 4px;
             font-weight: 600;
-            font-size: 11px;
-            border-radius: 5px 5px 0 0;
+            font-size: 10px;
+            border-radius: 3px 3px 0 0;
         }
         
         .materias-container {
-            padding: 6px;
+            padding: 4px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            min-height: 180px;
+            gap: 3px;
+            min-height: 160px;
         }
         
         .materia {
-            padding: 6px;
-            border-radius: 4px;
+            padding: 5px;
+            border-radius: 3px;
             cursor: pointer;
-            transition: all 0.2s;
             position: relative;
             border: 0.5px solid #ddd;
-            font-size: 10px;
-            line-height: 1.2;
+            font-size: 9px;
+            line-height: 1.1;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
         }
         
         .materia.available {
@@ -89,26 +82,15 @@
             cursor: not-allowed;
         }
         
-        .materia h4 {
-            margin-bottom: 2px;
-            font-weight: 600;
-            font-size: 10px;
-        }
-        
         .creditos {
             position: absolute;
-            top: 4px;
-            right: 4px;
+            top: 2px;
+            right: 2px;
             background: rgba(0,0,0,0.1);
-            border-radius: 6px;
-            padding: 1px 4px;
-            font-size: 9px;
+            border-radius: 4px;
+            padding: 1px 3px;
+            font-size: 8px;
             font-weight: bold;
-        }
-        
-        .codigo {
-            font-size: 9px;
-            opacity: 0.8;
         }
     </style>
 </head>
@@ -124,89 +106,89 @@
             {
                 semestre: 1,
                 materias: [
-                    { id: "bioestadistica1", nombre: "Bioestadística I", codigo: "0902003458", creditos: 4, requisitos: [] },
-                    { id: "matematica1", nombre: "Matemática I", codigo: "0902003455", creditos: 3, requisitos: [] },
-                    { id: "histologia", nombre: "Histología", codigo: "0902003456", creditos: 5, requisitos: [] },
-                    { id: "metodologia", nombre: "Metodología Inv.", codigo: "0902003459", creditos: 1, requisitos: [] },
-                    { id: "principios_quimica", nombre: "Principios de Química", codigo: "0902003457", creditos: 3, requisitos: [] }
+                    { id: "bioestadistica1", nombre: "Bioestadística I", creditos: 4, requisitos: [] },
+                    { id: "matematica1", nombre: "Matemática I", creditos: 3, requisitos: [] },
+                    { id: "histologia", nombre: "Histología", creditos: 5, requisitos: [] },
+                    { id: "metodologia", nombre: "Metodología Inv.", creditos: 1, requisitos: [] },
+                    { id: "principios_quimica", nombre: "Principios de Química", creditos: 3, requisitos: [] }
                 ]
             },
             // Semestre 2
             {
                 semestre: 2,
                 materias: [
-                    { id: "anatomia1", nombre: "Anatomía y Embriología I", codigo: "0902002520", creditos: 4, requisitos: ["histologia"] },
-                    { id: "matematica2", nombre: "Matemática II", codigo: "0902003460", creditos: 4, requisitos: ["matematica1"] },
-                    { id: "fisica1", nombre: "Física I", codigo: "0902003274", creditos: 4, requisitos: ["matematica1"] },
-                    { id: "quimica_organica1", nombre: "Química Orgánica I", codigo: "0902003461", creditos: 4, requisitos: ["principios_quimica"] }
+                    { id: "anatomia1", nombre: "Anatomía y Embriología I", creditos: 4, requisitos: ["histologia"] },
+                    { id: "matematica2", nombre: "Matemática II", creditos: 4, requisitos: ["matematica1"] },
+                    { id: "fisica1", nombre: "Física I", creditos: 4, requisitos: ["matematica1"] },
+                    { id: "quimica_organica1", nombre: "Química Orgánica I", creditos: 4, requisitos: ["principios_quimica"] }
                 ]
             },
             // Semestre 3
             {
                 semestre: 3,
                 materias: [
-                    { id: "epidemiologia", nombre: "Epidemiología", codigo: "0902003288", creditos: 3, requisitos: ["bioestadistica1"] },
-                    { id: "anatomia2", nombre: "Anatomía II", codigo: "0902002526", creditos: 2, requisitos: ["anatomia1"] },
-                    { id: "fisica2", nombre: "Física II", codigo: "0902003275", creditos: 4, requisitos: ["fisica1", "matematica1"] },
-                    { id: "quimica_analitica", nombre: "Química Analítica", codigo: "0902002523", creditos: 5, requisitos: ["principios_quimica"] }
+                    { id: "epidemiologia", nombre: "Epidemiología", creditos: 3, requisitos: ["bioestadistica1"] },
+                    { id: "anatomia2", nombre: "Anatomía II", creditos: 2, requisitos: ["anatomia1"] },
+                    { id: "fisica2", nombre: "Física II", creditos: 4, requisitos: ["fisica1", "matematica1"] },
+                    { id: "quimica_analitica", nombre: "Química Analítica", creditos: 5, requisitos: ["principios_quimica"] }
                 ]
             },
             // Semestre 4
             {
                 semestre: 4,
                 materias: [
-                    { id: "bioquimica1", nombre: "Bioquímica I", codigo: "0902002991", creditos: 6, requisitos: ["quimica_organica1", "quimica_analitica", "bioestadistica1"] },
-                    { id: "fisiologia", nombre: "Fisiología", codigo: "0902002994", creditos: 5, requisitos: ["histologia", "fisica2"] },
-                    { id: "sociologia", nombre: "Sociología", codigo: "0902003462", creditos: 3, requisitos: ["anatomia1"] }
+                    { id: "bioquimica1", nombre: "Bioquímica I", creditos: 6, requisitos: ["quimica_organica1", "quimica_analitica", "bioestadistica1"] },
+                    { id: "fisiologia", nombre: "Fisiología", creditos: 5, requisitos: ["histologia", "fisica2"] },
+                    { id: "sociologia", nombre: "Sociología", creditos: 3, requisitos: ["anatomia1"] }
                 ]
             },
             // Semestre 5
             {
                 semestre: 5,
                 materias: [
-                    { id: "bioquimica2", nombre: "Bioquímica II", codigo: "0902002992", creditos: 2, requisitos: ["bioquimica1"] },
-                    { id: "bacteriologia1", nombre: "Bacteriología I", codigo: "0902003465", creditos: 3, requisitos: ["bioquimica1"] },
-                    { id: "inmunologia1", nombre: "Immunología I", codigo: "0902002999", creditos: 2, requisitos: ["bioquimica1"] },
-                    { id: "deontologia", nombre: "Deontología", codigo: "0902003464", creditos: 3, requisitos: ["45creditos"] },
-                    { id: "administracion", nombre: "Administración Sanitaria", codigo: "0902003463", creditos: 3, requisitos: ["40creditos"] }
+                    { id: "bioquimica2", nombre: "Bioquímica II", creditos: 2, requisitos: ["bioquimica1"] },
+                    { id: "bacteriologia1", nombre: "Bacteriología I", creditos: 3, requisitos: ["bioquimica1"] },
+                    { id: "inmunologia1", nombre: "Immunología I", creditos: 2, requisitos: ["bioquimica1"] },
+                    { id: "deontologia", nombre: "Deontología", creditos: 3, requisitos: ["45creditos"] },
+                    { id: "administracion", nombre: "Administración Sanitaria", creditos: 3, requisitos: ["40creditos"] }
                 ]
             },
             // Semestre 6
             {
                 semestre: 6,
                 materias: [
-                    { id: "bioquimica_clinica1", nombre: "Bioquímica Cl. I", codigo: "0902003277", creditos: 5, requisitos: ["fisiologia", "bioquimica2"] },
-                    { id: "bacteriologia2", nombre: "Bacteriología II", codigo: "0902003466", creditos: 4, requisitos: ["bacteriologia1", "inmunologia1"] },
-                    { id: "lab_inmunologia", nombre: "Laboratorio de Inmunología", codigo: "0902003278", creditos: 2, requisitos: ["inmunologia1", "bacteriologia1"] },
-                    { id: "micologia1", nombre: "Micología I", codigo: "0902003279", creditos: 3, requisitos: ["bacteriologia1", "inmunologia1", "epidemiologia"] }
+                    { id: "bioquimica_clinica1", nombre: "Bioquímica Cl. I", creditos: 5, requisitos: ["fisiologia", "bioquimica2"] },
+                    { id: "bacteriologia2", nombre: "Bacteriología II", creditos: 4, requisitos: ["bacteriologia1", "inmunologia1"] },
+                    { id: "lab_inmunologia", nombre: "Laboratorio de Inmunología", creditos: 2, requisitos: ["inmunologia1", "bacteriologia1"] },
+                    { id: "micologia1", nombre: "Micología I", creditos: 3, requisitos: ["bacteriologia1", "inmunologia1", "epidemiologia"] }
                 ]
             },
             // Semestre 7
             {
                 semestre: 7,
                 materias: [
-                    { id: "bacteriologia3", nombre: "Bacteriología III", codigo: "0902003467", creditos: 4, requisitos: ["bacteriologia2"] },
-                    { id: "hematologia1", nombre: "Hematología I", codigo: "0902003280", creditos: 5, requisitos: ["fisiologia", "bioquimica2", "lab_inmunologia"] },
-                    { id: "parasitologia1", nombre: "Parasitología I", codigo: "0902002988", creditos: 4, requisitos: ["lab_inmunologia"] },
-                    { id: "virologia", nombre: "Virología", codigo: "0902003284", creditos: 3, requisitos: ["lab_inmunologia", "fisiologia"] }
+                    { id: "bacteriologia3", nombre: "Bacteriología III", creditos: 4, requisitos: ["bacteriologia2"] },
+                    { id: "hematologia1", nombre: "Hematología I", creditos: 5, requisitos: ["fisiologia", "bioquimica2", "lab_inmunologia"] },
+                    { id: "parasitologia1", nombre: "Parasitología I", creditos: 4, requisitos: ["lab_inmunologia"] },
+                    { id: "virologia", nombre: "Virología", creditos: 3, requisitos: ["lab_inmunologia", "fisiologia"] }
                 ]
             },
             // Semestre 8
             {
                 semestre: 8,
                 materias: [
-                    { id: "bioquimica_clinica2", nombre: "Bioquímica Cl. II", codigo: "0902003281", creditos: 5, requisitos: ["bioquimica_clinica1", "hematologia1"] },
-                    { id: "hematologia2", nombre: "Hematología II", codigo: "0902003282", creditos: 5, requisitos: ["hematologia1"] },
-                    { id: "parasitologia2", nombre: "Parasitología II", codigo: "0902003283", creditos: 3, requisitos: ["lab_inmunologia"] },
-                    { id: "toxicologia", nombre: "Toxicología", codigo: "0902003285", creditos: 5, requisitos: ["hematologia1", "bioquimica_clinica1"] }
+                    { id: "bioquimica_clinica2", nombre: "Bioquímica Cl. II", creditos: 5, requisitos: ["bioquimica_clinica1", "hematologia1"] },
+                    { id: "hematologia2", nombre: "Hematología II", creditos: 5, requisitos: ["hematologia1"] },
+                    { id: "parasitologia2", nombre: "Parasitología II", creditos: 3, requisitos: ["lab_inmunologia"] },
+                    { id: "toxicologia", nombre: "Toxicología", creditos: 5, requisitos: ["hematologia1", "bioquimica_clinica1"] }
                 ]
             },
             // Semestre 9-10
             {
                 semestre: "9-10",
                 materias: [
-                    { id: "internado", nombre: "Internado R + TEI", codigo: "0902003508", creditos: 30, requisitos: ["pre-internado"] },
-                    { id: "electivas", nombre: "Asignaturas electivas", codigo: "", creditos: 18, requisitos: [] }
+                    { id: "internado", nombre: "Internado R + TEI", creditos: 30, requisitos: ["pre-internado"] },
+                    { id: "electivas", nombre: "Asignaturas electivas", creditos: 18, requisitos: [] }
                 ]
             }
         ];
@@ -264,8 +246,8 @@
                     
                     // Contenido de la materia
                     materiaDiv.innerHTML = `
-                        <h4>${materia.nombre}</h4>
-                        <div class="creditos">${materia.creditos} CR</div>
+                        <div>${materia.nombre}</div>
+                        <div class="creditos">${materia.creditos}</div>
                     `;
                     
                     // Evento click para marcar/desmarcar
@@ -289,46 +271,7 @@
         function estaDisponible(materia) {
             if (estadoMaterias[materia.id]) return false; // Ya completada
             
-            // Verificar requisitos especiales
-            if (materia.requisitos.includes('45creditos')) {
-                if (calcularCreditosCompletados() < 45) return false;
-            }
-            
-            if (materia.requisitos.includes('40creditos')) {
-                if (calcularCreditosCompletados() < 40) return false;
-            }
-            
-            if (materia.requisitos.includes('pre-internado')) {
-                // Verificar que todas las materias de semestres 1-8 estén completadas
-                const materiasPre = pensum.filter(s => s.semestre !== "9-10").flatMap(s => s.materias);
-                for (const m of materiasPre) {
-                    if (!estadoMaterias[m.id]) return false;
-                }
-            }
-            
-            // Verificar requisitos normales
-            for (const reqId of materia.requisitos) {
-                if (reqId !== '45creditos' && reqId !== '40creditos' && reqId !== 'pre-internado') {
-                    if (!estadoMaterias[reqId]) {
-                        return false;
-                    }
-                }
-            }
-            
-            return true;
-        }
-        
-        // Calcular créditos completados
-        function calcularCreditosCompletados() {
-            let total = 0;
-            pensum.forEach(semestre => {
-                semestre.materias.forEach(materia => {
-                    if (estadoMaterias[materia.id]) {
-                        total += materia.creditos;
-                    }
-                });
-            });
-            return total;
+    
         }
         
         // Inicializar cuando el documento esté cargado
