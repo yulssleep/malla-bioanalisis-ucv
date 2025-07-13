@@ -15,54 +15,75 @@
         
         body {
             background-color: #ffffff;
-            padding: 5px;
+            padding: 8px;
             max-width: 100%;
+            overflow: hidden;
         }
         
         .malla-container {
             display: flex;
             overflow-x: auto;
-            gap: 6px;
-            padding: 3px 1px;
-            scrollbar-width: none;
+            gap: 8px;
+            padding: 8px 4px 20px; /* Espacio extra abajo para la barra */
+            scrollbar-width: thin;
+            scrollbar-color: #000080 #f0f0f0;
+        }
+        
+        /* Estilo para la barra de desplazamiento */
+        .malla-container::-webkit-scrollbar {
+            height: 10px;
+        }
+        
+        .malla-container::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .malla-container::-webkit-scrollbar-thumb {
+            background: #000080;
+            border-radius: 5px;
         }
         
         .semestre {
-            min-width: 145px;
+            min-width: 150px;
             border: 1px solid #0E0E55;
-            border-radius: 4px;
+            border-radius: 5px;
             background: white;
+            flex-shrink: 0;
         }
         
         .semestre-header {
             background: #000080;
             color: white;
             text-align: center;
-            padding: 4px;
+            padding: 6px;
             font-weight: 600;
             font-size: 10px;
-            border-radius: 3px 3px 0 0;
+            border-radius: 4px 4px 0 0;
+            position: sticky;
+            left: 0;
         }
         
         .materias-container {
-            padding: 4px;
+            padding: 5px;
             display: flex;
             flex-direction: column;
-            gap: 3px;
-            min-height: 160px;
+            gap: 4px;
+            min-height: 180px;
         }
         
         .materia {
-            padding: 5px;
+            padding: 6px;
             border-radius: 3px;
             cursor: pointer;
             position: relative;
             border: 0.5px solid #ddd;
             font-size: 9px;
             line-height: 1.1;
-            min-height: 28px;
+            min-height: 30px;
             display: flex;
             align-items: center;
+            transition: all 0.2s;
         }
         
         .materia.available {
@@ -82,15 +103,35 @@
             cursor: not-allowed;
         }
         
+        .materia.available:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
         .creditos {
             position: absolute;
-            top: 2px;
-            right: 2px;
+            top: 3px;
+            right: 3px;
             background: rgba(0,0,0,0.1);
-            border-radius: 4px;
-            padding: 1px 3px;
+            border-radius: 3px;
+            padding: 1px 4px;
             font-size: 8px;
             font-weight: bold;
+        }
+        
+        .scroll-hint {
+            text-align: center;
+            color: #888;
+            font-size: 9px;
+            margin-top: -15px;
+            padding: 0 5px 5px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
         }
     </style>
 </head>
@@ -98,6 +139,7 @@
     <div class="malla-container" id="malla-container">
         <!-- Semestres se generarán con JavaScript -->
     </div>
+    <div class="scroll-hint">← Desplázate para ver más semestres →</div>
 
     <script>
         // Datos completos del pensum
@@ -271,7 +313,46 @@
         function estaDisponible(materia) {
             if (estadoMaterias[materia.id]) return false; // Ya completada
             
-    
+            // Verificar requisitos especiales
+            if (materia.requisitos.includes('45creditos')) {
+                if (calcularCreditosCompletados() < 45) return false;
+            }
+            
+            if (materia.requisitos.includes('40creditos')) {
+                if (calcularCreditosCompletados() < 40) return false;
+            }
+            
+            if (materia.requisitos.includes('pre-internado')) {
+                // Verificar que todas las materias de semestres 1-8 estén completadas
+                const materiasPre = pensum.filter(s => s.semestre !== "9-10").flatMap(s => s.materias);
+                for (const m of materiasPre) {
+                    if (!estadoMaterias[m.id]) return false;
+                }
+            }
+            
+            // Verificar requisitos normales
+            for (const reqId of materia.requisitos) {
+                if (reqId !== '45creditos' && reqId !== '40creditos' && reqId !== 'pre-internado') {
+                    if (!estadoMaterias[reqId]) {
+                        return false;
+                    }
+                }
+            }
+            
+            return true;
+        }
+        
+        // Calcular créditos completados
+        function calcularCreditosCompletados() {
+            let total = 0;
+            pensum.forEach(semestre => {
+                semestre.materias.forEach(materia => {
+                    if (estadoMaterias[materia.id]) {
+                        total += materia.creditos;
+                    }
+                });
+            });
+            return total;
         }
         
         // Inicializar cuando el documento esté cargado
