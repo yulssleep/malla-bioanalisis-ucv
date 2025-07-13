@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malla Interactiva Bioanálisis - UCV</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -30,60 +29,12 @@
         h1 {
             color: #0E0E55;
             margin-bottom: 10px;
+            font-size: 2.2rem;
         }
         
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-        
-        button {
-            background: #000080;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        button:hover {
-            background: #0E0E55;
-            transform: translateY(-2px);
-        }
-        
-        button i {
-            font-size: 18px;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        
-        .stat-card {
-            background: #f0f8ff;
-            border: 2px solid #0E0E55;
-            border-radius: 10px;
-            padding: 15px;
-            min-width: 180px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 28px;
-            font-weight: bold;
-            color: #000080;
+        .subtitle {
+            color: #555;
+            font-size: 1.1rem;
         }
         
         .malla-container {
@@ -91,7 +42,23 @@
             overflow-x: auto;
             gap: 15px;
             padding: 15px 5px;
-            margin-top: 20px;
+            margin: 20px 0;
+            scrollbar-width: thin;
+            scrollbar-color: #000080 #f0f0f0;
+        }
+        
+        .malla-container::-webkit-scrollbar {
+            height: 10px;
+        }
+        
+        .malla-container::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .malla-container::-webkit-scrollbar-thumb {
+            background: #000080;
+            border-radius: 5px;
         }
         
         .semestre {
@@ -173,6 +140,29 @@
             opacity: 0.8;
         }
         
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 40px 0 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: #f0f8ff;
+            border: 2px solid #0E0E55;
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 180px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #000080;
+        }
+        
         .progress-container {
             width: 100%;
             height: 10px;
@@ -189,83 +179,31 @@
             transition: width 0.5s;
         }
         
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
+        .notion-tip {
+            background: #e0f7fa;
+            border-left: 4px solid #00838f;
+            padding: 15px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
         }
         
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: relative;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #000080;
-        }
-        
-        .prereq {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed #ddd;
-        }
-        
-        .prereq-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 8px 0;
-        }
-        
-        .prereq-status {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-        
-        .prereq-status.completed {
-            background: #E05F77;
-            color: white;
-        }
-        
-        .reset-section {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        
-        /* Responsive */
         @media (max-width: 768px) {
             .semestre {
                 min-width: 220px;
             }
             
-            .controls {
-                flex-direction: column;
-                align-items: center;
+            .stats {
+                gap: 15px;
+            }
+            
+            .stat-card {
+                min-width: 150px;
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -273,22 +211,11 @@
 <body>
     <header>
         <h1>LICENCIATURA EN BIOANÁLISIS - UCV</h1>
-        <p>Malla curricular interactiva</p>
+        <p class="subtitle">Malla curricular interactiva</p>
     </header>
     
-    <div class="controls">
-        <button id="btn-todo">
-            <i>✓</i> Ver todas las materias
-        </button>
-        <button id="btn-guardar">
-            <i>💾</i> Guardar mi progreso
-        </button>
-        <button id="btn-cargar">
-            <i>📂</i> Cargar progreso
-        </button>
-        <button id="btn-reset">
-            <i>🔄</i> Reiniciar
-        </button>
+    <div class="malla-container" id="malla-container">
+        <!-- Semestres se generarán con JavaScript -->
     </div>
     
     <div class="stats">
@@ -311,30 +238,11 @@
         </div>
     </div>
     
-    <div class="malla-container" id="malla-container">
-        <!-- Semestres se generarán con JavaScript -->
-    </div>
-    
-    <div class="reset-section">
-        <button id="btn-reset-completo" style="background: #E05F77;">
-            <i>⚠️</i> Reiniciar todo el progreso
-        </button>
-    </div>
-    
-    <div class="modal" id="detalle-modal">
-        <div class="modal-content">
-            <span class="close-modal" id="close-modal">&times;</span>
-            <h3 id="modal-titulo"></h3>
-            <p><strong>Código:</strong> <span id="modal-codigo"></span></p>
-            <p><strong>Créditos:</strong> <span id="modal-creditos"></span></p>
-            <div class="prereq" id="modal-prereq">
-                <h4>Requisitos:</h4>
-                <div id="prereq-list"></div>
-            </div>
-            <button id="btn-completar" style="margin-top: 20px; width: 100%;">
-                <i>✓</i> Marcar como completada
-            </button>
-        </div>
+    <div class="notion-tip">
+        <strong>Para usar en Notion:</strong> 
+        <p>1. Copia esta URL y pégalo en un bloque Embed de Notion</p>
+        <p>2. Haz clic en las materias disponibles para marcarlas como completadas</p>
+        <p>3. Tu progreso se guardará automáticamente en tu navegador</p>
     </div>
 
     <script>
@@ -433,7 +341,6 @@
 
         // Estado de las materias
         let estadoMaterias = {};
-        let materiaActual = null;
         
         // Inicializar
         function init() {
@@ -452,15 +359,6 @@
             
             renderMalla();
             actualizarEstadisticas();
-            
-            // Event listeners
-            document.getElementById('close-modal').addEventListener('click', cerrarModal);
-            document.getElementById('btn-completar').addEventListener('click', completarMateria);
-            document.getElementById('btn-todo').addEventListener('click', verTodasMaterias);
-            document.getElementById('btn-guardar').addEventListener('click', guardarProgreso);
-            document.getElementById('btn-cargar').addEventListener('click', cargarProgreso);
-            document.getElementById('btn-reset').addEventListener('click', reiniciarProgreso);
-            document.getElementById('btn-reset-completo').addEventListener('click', reiniciarTodo);
         }
         
         // Renderizar la malla
@@ -503,7 +401,10 @@
                     // Evento click solo para materias disponibles
                     if (estaDisponible(materia)) {
                         materiaDiv.addEventListener('click', () => {
-                            mostrarDetalleMateria(materia);
+                            estadoMaterias[materia.id] = true;
+                            localStorage.setItem('estadoMaterias', JSON.stringify(estadoMaterias));
+                            renderMalla();
+                            actualizarEstadisticas();
                         });
                     }
                     
@@ -548,105 +449,6 @@
             return true;
         }
         
-        // Mostrar detalles de una materia
-        function mostrarDetalleMateria(materia) {
-            materiaActual = materia;
-            const modal = document.getElementById('detalle-modal');
-            const titulo = document.getElementById('modal-titulo');
-            const codigo = document.getElementById('modal-codigo');
-            const creditos = document.getElementById('modal-creditos');
-            const prereqList = document.getElementById('prereq-list');
-            
-            titulo.textContent = materia.nombre;
-            codigo.textContent = materia.codigo;
-            creditos.textContent = materia.creditos;
-            
-            prereqList.innerHTML = '';
-            
-            if (materia.requisitos.length === 0) {
-                prereqList.innerHTML = '<p>No tiene requisitos previos</p>';
-            } else {
-                materia.requisitos.forEach(reqId => {
-                    // Requisitos especiales
-                    if (reqId === '45creditos') {
-                        const item = document.createElement('div');
-                        item.className = 'prereq-item';
-                        const completado = calcularCreditosCompletados() >= 45;
-                        
-                        item.innerHTML = `
-                            <div class="prereq-status ${completado ? 'completed' : ''}">${completado ? '✓' : ''}</div>
-                            <div>45 créditos completados</div>
-                        `;
-                        prereqList.appendChild(item);
-                    } else if (reqId === '40creditos') {
-                        const item = document.createElement('div');
-                        item.className = 'prereq-item';
-                        const completado = calcularCreditosCompletados() >= 40;
-                        
-                        item.innerHTML = `
-                            <div class="prereq-status ${completado ? 'completed' : ''}">${completado ? '✓' : ''}</div>
-                            <div>40 créditos completados</div>
-                        `;
-                        prereqList.appendChild(item);
-                    } else if (reqId === 'pre-internado') {
-                        const item = document.createElement('div');
-                        item.className = 'prereq-item';
-                        const completado = verificarPreInternado();
-                        
-                        item.innerHTML = `
-                            <div class="prereq-status ${completado ? 'completed' : ''}">${completado ? '✓' : ''}</div>
-                            <div>Todas las materias pre-internado completadas</div>
-                        `;
-                        prereqList.appendChild(item);
-                    } else {
-                        // Requisitos normales
-                        const reqMateria = encontrarMateriaPorId(reqId);
-                        if (reqMateria) {
-                            const item = document.createElement('div');
-                            item.className = 'prereq-item';
-                            const completado = estadoMaterias[reqId];
-                            
-                            item.innerHTML = `
-                                <div class="prereq-status ${completado ? 'completed' : ''}">${completado ? '✓' : ''}</div>
-                                <div>${reqMateria.nombre}</div>
-                            `;
-                            prereqList.appendChild(item);
-                        }
-                    }
-                });
-            }
-            
-            modal.style.display = 'flex';
-        }
-        
-        // Encontrar materia por ID
-        function encontrarMateriaPorId(id) {
-            for (const semestre of pensum) {
-                for (const materia of semestre.materias) {
-                    if (materia.id === id) {
-                        return materia;
-                    }
-                }
-            }
-            return null;
-        }
-        
-        // Cerrar modal
-        function cerrarModal() {
-            document.getElementById('detalle-modal').style.display = 'none';
-        }
-        
-        // Completar materia
-        function completarMateria() {
-            if (materiaActual) {
-                estadoMaterias[materiaActual.id] = true;
-                localStorage.setItem('estadoMaterias', JSON.stringify(estadoMaterias));
-                renderMalla();
-                actualizarEstadisticas();
-                cerrarModal();
-            }
-        }
-        
         // Calcular créditos completados
         function calcularCreditosCompletados() {
             let total = 0;
@@ -681,64 +483,6 @@
             document.getElementById('materias-completadas').textContent = materias;
             document.getElementById('porcentaje-progreso').textContent = `${porcentaje}%`;
             document.getElementById('progreso-general').style.width = `${porcentaje}%`;
-        }
-        
-        // Ver todas las materias
-        function verTodasMaterias() {
-            // Mostrar todas las materias como disponibles temporalmente
-            const materias = document.querySelectorAll('.materia');
-            materias.forEach(m => {
-                m.classList.remove('locked');
-                if (!m.classList.contains('completed')) {
-                    m.classList.add('available');
-                }
-            });
-            
-            setTimeout(() => {
-                renderMalla();
-            }, 3000);
-        }
-        
-        // Guardar progreso
-        function guardarProgreso() {
-            localStorage.setItem('estadoMaterias', JSON.stringify(estadoMaterias));
-            alert('Progreso guardado correctamente ✅');
-        }
-        
-        // Cargar progreso
-        function cargarProgreso() {
-            const guardado = localStorage.getItem('estadoMaterias');
-            if (guardado) {
-                estadoMaterias = JSON.parse(guardado);
-                renderMalla();
-                actualizarEstadisticas();
-                alert('Progreso cargado correctamente ✅');
-            } else {
-                alert('No se encontró progreso guardado');
-            }
-        }
-        
-        // Reiniciar progreso
-        function reiniciarProgreso() {
-            if (confirm('¿Estás seguro de reiniciar tu progreso? Se perderán todos los datos guardados.')) {
-                localStorage.removeItem('estadoMaterias');
-                estadoMaterias = {};
-                pensum.forEach(semestre => {
-                    semestre.materias.forEach(materia => {
-                        estadoMaterias[materia.id] = false;
-                    });
-                });
-                renderMalla();
-                actualizarEstadisticas();
-            }
-        }
-        
-        // Reiniciar todo
-        function reiniciarTodo() {
-            if (confirm('¿Estás seguro de reiniciar TODO el progreso? Esta acción no se puede deshacer.')) {
-                localStorage.removeItem('estadoMaterias');
-                location.reload();
-            }
         }
         
         // Inicializar cuando el documento esté cargado
